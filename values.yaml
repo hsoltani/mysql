@@ -10,10 +10,12 @@ config:
   mysql:
     baseUrl: ''
     hostname: ''
+  useDefaultImages: 'True'
   mySqlDatabase: 'admin'
   mySqlUsername: 'admin'
   mySqlPassword: 'secret'
   mySqlNodePortNumber: '3306'
+  enableMySqlMetrics: 'False'
 
 service:
   mysql:

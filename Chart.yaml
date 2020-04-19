@@ -7,8 +7,8 @@ description: 'A project for centos'
 keywords:
   - mysql
   - mysql
-  - database
   - sql
+  - database
 sources:
   - https://github.com/hsoltani/mysql
 maintainers:

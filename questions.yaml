@@ -35,6 +35,13 @@ questions:
     required: true
     label: 'update strategy'
     group: Config
+  - variable: config.useDefaultImages
+    default: True
+    description: ''
+    type: boolean
+    required: false
+    label: 'Use Default Images'
+    group: Config
   - variable: config.mySqlDatabase
     default: admin
     description: ''
@@ -59,9 +66,16 @@ questions:
   - variable: config.mySqlNodePortNumber
     default: 3306
     description: ''
-    type: string
+    type: int
     required: true
     label: 'MySQL NodePort number'
+    group: Config
+  - variable: config.enableMySqlMetrics
+    default: False
+    description: ''
+    type: boolean
+    required: false
+    label: 'Enable MySQL Metrics'
     group: Config
 
 # Persistence
