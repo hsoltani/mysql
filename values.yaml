@@ -2,9 +2,6 @@ images:
   mysql:
     repository: ranchercharts/mysql
     tag: 5.7.14
-  mysql:
-    repository: 
-    tag: 
 
 config:
   clusterProvider: infrastructure
@@ -13,15 +10,12 @@ config:
   mysql:
     baseUrl: ''
     hostname: ''
-  mysql:
-    baseUrl: ''
-    hostname: ''
-  useDefaultImages: 'T'
+  useDefaultImages: 'true'
   mySqlDatabase: 'admin'
   mySqlUsername: 'admin'
   mySqlPassword: 'secret'
   mySqlNodePortNumber: '3306'
-  enableMySqlMetrics: 'False'
+  enableMySqlMetrics: 'false'
 
 service:
   mysql:
@@ -29,21 +23,8 @@ service:
     externalTrafficPolicy: Cluster
     nodePorts:
       http: ''
-  mysql:
-    type: NodePort
-    externalTrafficPolicy: Cluster
-    nodePorts:
-      http: ''
 
 ingress:
-  mysql:
-    certificate: ''
-    enabled: false
-    hostname: ''
-    path: /
-    tls: false
-    issuer:
-      name: letsencrypt-staging
   mysql:
     certificate: ''
     enabled: false
