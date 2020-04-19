@@ -2,6 +2,9 @@ images:
   mysql:
     repository: ranchercharts/mysql
     tag: 5.7.14
+  busybox:
+    repository: ranchercharts/busybox
+    tag: 1.29.3
 
 config:
   clusterProvider: infrastructure
@@ -10,15 +13,22 @@ config:
   mysql:
     baseUrl: ''
     hostname: ''
+  busybox:
+    hostname: ''
   useDefaultImages: 'true'
   mySqlDatabase: 'admin'
   mySqlUsername: 'admin'
   mySqlPassword: 'secret'
-  mySqlNodePortNumber: '3306'
+  mySqlNodeportNumber: '3306'
   enableMySqlMetrics: 'false'
 
 service:
   mysql:
+    type: NodePort
+    externalTrafficPolicy: Cluster
+    nodePorts:
+      http: ''
+  busybox:
     type: NodePort
     externalTrafficPolicy: Cluster
     nodePorts:

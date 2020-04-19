@@ -38,7 +38,7 @@ questions:
   - variable: config.useDefaultImages
     default: true
     description: ''
-    type: boolean
+    type: string
     required: false
     label: 'Use Default Images'
     group: Config
@@ -61,14 +61,14 @@ questions:
     description: ''
     type: password
     required: true
-    label: 'MySQL Password'
+    label: 'MySQL password'
     group: Config
-  - variable: config.mySqlNodePortNumber
+  - variable: config.mySqlNodeportNumber
     default: 3306
     description: ''
     type: int
     required: true
-    label: 'MySQL NodePort number'
+    label: 'MySQL Nodeport number'
     group: Config
   - variable: config.enableMySqlMetrics
     default: false
@@ -271,4 +271,18 @@ questions:
     type: string
     required: true
     label: 'mysql tag'
+    group: Images
+  - variable: images.busybox.repository
+    default: ranchercharts/busybox
+    description: ''
+    type: string
+    required: true
+    label: 'busybox repository'
+    group: Images
+  - variable: images.busybox.tag
+    default: 1.29.3
+    description: ''
+    type: string
+    required: true
+    label: 'busybox tag'
     group: Images

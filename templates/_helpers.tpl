@@ -59,3 +59,14 @@ Calculate mysql base url
 {{- end }}
 {{- end }}
 {{- end }}
+
+{{/*
+Calculate busybox hostname
+*/}}
+{{- define "mysql.busybox-hostname" }}
+{{- if (and .Values.config.busybox.hostname (not (empty .Values.config.busybox.hostname))) }}
+{{- printf .Values.config.busybox.hostname }}
+{{- else }}
+{{- printf "%s-busybox" (include "mysql.fullname" .) }}
+{{- end }}
+{{- end }}

@@ -11,5 +11,5 @@ data:
   use_default_images: {{ .Values.config.useDefaultImages | quote }}
   my_sql_database: {{ .Values.config.mySqlDatabase | quote }}
   my_sql_username: {{ .Values.config.mySqlUsername | quote }}
-  my_sql_node_port_number: {{ .Values.config.mySqlNodePortNumber | quote }}
+  my_sql_nodeport_number: {{ .Values.config.mySqlNodeportNumber | quote }}
   enable_my_sql_metrics: {{ .Values.config.enableMySqlMetrics | quote }}
