@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ template "mysql.fullname" . }}
+  labels:
+    app: {{ template "mysql.name" . }}
+    chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+data:
+  my_sql_database: {{ .Values.config.mySqlDatabase | quote }}
+  my_sql_username: {{ .Values.config.mySqlUsername | quote }}
+  my_sql_node_port_number: {{ .Values.config.mySqlNodePortNumber | quote }}

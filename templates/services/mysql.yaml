@@ -1,0 +1,28 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ template "mysql.fullname" . }}-mysql
+  labels:
+    app: {{ template "mysql.name" . }}-mysql
+    chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  {{- if .Values.ingress.mysql.enabled }}
+  type: ClusterIP
+  {{- else }}
+  type: {{ .Values.service.mysql.type }}
+  {{- if (or (eq .Values.service.mysql.type "LoadBalancer") (eq .Values.service.mysql.type "NodePort")) }}
+  externalTrafficPolicy: {{ .Values.service.mysql.externalTrafficPolicy }}
+  {{- end }}
+  {{- end }}
+  ports:
+    - name: http
+      port: 80
+      targetPort: container
+      {{- if (and (eq .Values.service.mysql.type "NodePort") (not (empty .Values.service.mysql.nodePorts.http))) }}
+      nodePort: {{ .Values.service.mysql.nodePorts.http }}
+      {{- end }}
+  selector:
+    app: {{ template "mysql.name" . }}-mysql
+    release: {{ .Release.Name }}

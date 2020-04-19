@@ -1,0 +1,260 @@
+categories:
+  - Server
+questions:
+
+# Config
+  - variable: config.clusterProvider
+    default: infrastructure
+    description: ''
+    type: enum
+    options:
+      - infrastructure
+      - eks
+      - aks
+      - gke
+    required: true
+    label: 'cluster provider'
+    group: Config
+  - variable: config.imagePullPolicy
+    default: IfNotPresent
+    description: ''
+    type: enum
+    options:
+      - IfNotPresent
+      - Always
+    required: true
+    label: 'pull policy'
+    group: Config
+  - variable: config.updateStrategy
+    default: RollingUpdate
+    description: ''
+    type: enum
+    options:
+      - RollingUpdate
+      - Recreate
+    required: true
+    label: 'update strategy'
+    group: Config
+  - variable: config.mySqlDatabase
+    default: admin
+    description: ''
+    type: string
+    required: true
+    label: 'MySQL Database'
+    group: Config
+  - variable: config.mySqlUsername
+    default: admin
+    description: ''
+    type: string
+    required: true
+    label: 'MySQL Username'
+    group: Config
+  - variable: config.mySqlPassword
+    default: secret
+    description: ''
+    type: password
+    required: false
+    label: 'MySQL Password'
+    group: Config
+  - variable: config.mySqlNodePortNumber
+    default: 3306
+    description: ''
+    type: string
+    required: true
+    label: 'MySQL NodePort number'
+    group: Config
+
+# Persistence
+  - variable: persistence.enabled
+    default: false
+    description: ''
+    type: boolean
+    required: true
+    label: enabled
+    show_subquestion_if: true
+    group: Persistence
+    subquestions:
+      - variable: persistence.size
+        default: 1Gi
+        description: ''
+        type: string
+        required: true
+        label: size
+      - variable: persistence.storageClass
+        default: ''
+        description: ''
+        type: storageclass
+        required: false
+        label: 'storage class'
+      - variable: persistence.accessMode
+        default: ReadWriteOnce
+        description: ''
+        type: enum
+        options:
+          - ReadWriteOnce
+          - ReadWriteMany
+          - ReadOnlyMany
+        required: false
+        label: 'access mode'
+      - variable: persistence.existingClaim
+        default: ''
+        description: ''
+        type: string
+        required: false
+        label: 'existing claim'
+      - variable: persistence.velero.enabled
+        default: false
+        description: ''
+        type: boolean
+        required: true
+        label: 'velero enabled'
+      - variable: persistence.stash.enabled
+        default: false
+        description: ''
+        type: boolean
+        required: true
+        label: 'stash enabled'
+      - variable: persistence.stash.paused
+        default: false
+        description: ''
+        type: boolean
+        required: true
+        show_if: persistence.stash.enabled=true
+        label: 'stash paused'
+      - variable: persistence.stash.type
+        default: s3
+        description: ''
+        type: enum
+        options:
+          - gcs
+          - s3
+          - azure
+        required: false
+        show_if: persistence.stash.enabled=true
+        label: 'stash type'
+      - variable: persistence.stash.container
+        default: ''
+        description: ''
+        type: string
+        required: false
+        show_if: persistence.stash.type=azure&&persistence.stash.enabled=true
+        label: 'stash container'
+      - variable: persistence.stash.bucket
+        default: ''
+        description: ''
+        type: string
+        required: false
+        show_if: persistence.stash.enabled=true
+        label: 'stash bucket'
+      - variable: persistence.stash.endpoint
+        default: s3.amazonaws.com
+        description: ''
+        type: string
+        required: true
+        show_if: persistence.stash.type=s3&&persistence.stash.enabled=true
+        label: 'stash endpoint'
+      - variable: persistence.stash.schedule
+        default: '0 0 * * *'
+        description: ''
+        type: string
+        required: true
+        show_if: persistence.stash.enabled=true
+        label: 'stash schedule'
+      - variable: persistence.stash.keepLast
+        default: 30
+        description: ''
+        type: int
+        required: true
+        show_if: persistence.stash.enabled=true
+        label: 'stash keep last'
+      - variable: persistence.stash.restore.snapshot.data
+        default: ''
+        description: ''
+        type: string
+        required: false
+        show_if: persistence.stash.enabled=true
+        label: 'stash restore snapshot data'
+
+# Services and Load Balancing
+  - variable: ingress.mysql.enabled
+    default: true
+    description: ''
+    type: boolean
+    label: 'mysql ingress enabled'
+    show_subquestion_if: true
+    group: 'Services and Load Balancing'
+    subquestions:
+      - variable: ingress.mysql.tls
+        default: false
+        description: ''
+        type: boolean
+        required: true
+        label: 'mysql ingress tls'
+      - variable: ingress.mysql.hostname
+        default: xip.io
+        description: ''
+        type: hostname
+        required: true
+        label: 'mysql ingress hostname'
+      - variable: ingress.mysql.path
+        default: /
+        description: ''
+        type: string
+        required: true
+        label: 'mysql ingress path'
+      - variable: ingress.mysql.issuer.name
+        default: letsencrypt-staging
+        description: ''
+        type: enum
+        show_if: ingress.mysql.tls=true
+        options:
+          - none
+          - letsencrypt-staging
+          - letsencrypt-prod
+        required: true
+        label: 'mysql ingress issuer name'
+      - variable: ingress.mysql.certificate
+        default: ''
+        description: ''
+        type: string
+        show_if: ingress.mysql.tls=true&&ingress.mysql.issuer.name=none
+        required: false
+        label: 'mysql ingress certificate'
+  - variable: service.mysql.type
+    default: NodePort
+    description: ''
+    type: enum
+    show_if: ingress.mysql.enabled=false
+    options:
+      - ClusterIP
+      - NodePort
+      - LoadBalancer
+    required: true
+    label: 'mysql service type'
+    show_subquestion_if: NodePort
+    group: 'Services and Load Balancing'
+    subquestions:
+      - variable: service.mysql.nodePorts.http
+        default: ''
+        description: ''
+        type: int
+        min: 30000
+        max: 32767
+        show_if: ingress.mysql.enabled=false
+        label: 'mysql http port'
+
+# Images
+  - variable: images.mysql.repository
+    default: ranchercharts/mysql
+    description: ''
+    type: string
+    required: true
+    label: 'mysql repository'
+    group: Images
+  - variable: images.mysql.tag
+    default: 5.7.14
+    description: ''
+    type: string
+    required: true
+    label: 'mysql tag'
+    group: Images
