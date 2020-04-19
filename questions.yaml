@@ -36,7 +36,7 @@ questions:
     label: 'update strategy'
     group: Config
   - variable: config.useDefaultImages
-    default: True
+    default: T
     description: ''
     type: boolean
     required: false
@@ -60,7 +60,7 @@ questions:
     default: secret
     description: ''
     type: password
-    required: false
+    required: true
     label: 'MySQL Password'
     group: Config
   - variable: config.mySqlNodePortNumber
@@ -256,6 +256,72 @@ questions:
         max: 32767
         show_if: ingress.mysql.enabled=false
         label: 'mysql http port'
+  - variable: ingress.mysql.enabled
+    default: true
+    description: ''
+    type: boolean
+    label: 'mysql ingress enabled'
+    show_subquestion_if: true
+    group: 'Services and Load Balancing'
+    subquestions:
+      - variable: ingress.mysql.tls
+        default: false
+        description: ''
+        type: boolean
+        required: true
+        label: 'mysql ingress tls'
+      - variable: ingress.mysql.hostname
+        default: xip.io
+        description: ''
+        type: hostname
+        required: true
+        label: 'mysql ingress hostname'
+      - variable: ingress.mysql.path
+        default: /
+        description: ''
+        type: string
+        required: true
+        label: 'mysql ingress path'
+      - variable: ingress.mysql.issuer.name
+        default: letsencrypt-staging
+        description: ''
+        type: enum
+        show_if: ingress.mysql.tls=true
+        options:
+          - none
+          - letsencrypt-staging
+          - letsencrypt-prod
+        required: true
+        label: 'mysql ingress issuer name'
+      - variable: ingress.mysql.certificate
+        default: ''
+        description: ''
+        type: string
+        show_if: ingress.mysql.tls=true&&ingress.mysql.issuer.name=none
+        required: false
+        label: 'mysql ingress certificate'
+  - variable: service.mysql.type
+    default: NodePort
+    description: ''
+    type: enum
+    show_if: ingress.mysql.enabled=false
+    options:
+      - ClusterIP
+      - NodePort
+      - LoadBalancer
+    required: true
+    label: 'mysql service type'
+    show_subquestion_if: NodePort
+    group: 'Services and Load Balancing'
+    subquestions:
+      - variable: service.mysql.nodePorts.http
+        default: ''
+        description: ''
+        type: int
+        min: 30000
+        max: 32767
+        show_if: ingress.mysql.enabled=false
+        label: 'mysql http port'
 
 # Images
   - variable: images.mysql.repository
@@ -267,6 +333,20 @@ questions:
     group: Images
   - variable: images.mysql.tag
     default: 5.7.14
+    description: ''
+    type: string
+    required: true
+    label: 'mysql tag'
+    group: Images
+  - variable: images.mysql.repository
+    default: 
+    description: ''
+    type: string
+    required: true
+    label: 'mysql repository'
+    group: Images
+  - variable: images.mysql.tag
+    default: 
     description: ''
     type: string
     required: true

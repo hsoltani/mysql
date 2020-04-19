@@ -1,6 +1,6 @@
 name: mysql
 home: https://github.com/hsoltani/mysql
-icon: https://www.mysql.com/common/logos/logo-mysql-170x115.png
+icon:  https://www.mysql.com/common/logos/logo-mysql-170x115.png
 version: 1.0.0
 appVersion: latest
 description: 'A project for centos'
